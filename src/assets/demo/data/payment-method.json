@@ -1,0 +1,17 @@
+{
+    "data": [
+        {
+            "id": "123",
+            "description":  "Boleto"
+        },
+        {
+            "id": "456",
+            "description":  "Pix"
+        },
+        {
+            "id": "789",
+            "description":  "Depósito"
+        }
+
+    ]
+}

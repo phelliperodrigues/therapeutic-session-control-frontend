@@ -1,0 +1,135 @@
+<div
+    id="layout-config"
+    class="layout-config"
+    [ngClass]="{ 'layout-config-active': appMain.configActive }"
+    (click)="appMain.onConfigClick($event)"
+>
+    <a
+        style="cursor: pointer"
+        id="layout-config-button"
+        class="layout-config-button"
+        (click)="onConfigButtonClick($event)"
+    >
+        <i class="pi pi-cog"></i>
+    </a>
+    <button
+        pButton
+        pRipple
+        type="button"
+        icon="pi pi-times"
+        class="p-button-rounded p-button-danger p-button-text layout-config-close"
+        (click)="onConfigButtonClick($event)"
+    ></button>
+    <div class="layout-config-content">
+        <h6 class="mt-0">Configurar Tamanho da Fonte</h6>
+        <div class="config-scale">
+            <button
+                pButton
+                pRipple
+                type="button"
+                icon="pi pi-minus"
+                (click)="decrementScale()"
+                class="p-button-rounded p-button-text"
+                [disabled]="scale === scales[0]"
+            ></button>
+            <i
+                *ngFor="let item of scales"
+                class="pi pi-circle-fill"
+                [ngClass]="{ 'scale-active': item === scale }"
+            ></i>
+            <button
+                pButton
+                pRipple
+                type="button"
+                icon="pi pi-plus"
+                (click)="incrementScale()"
+                class="p-button-rounded p-button-text"
+                [disabled]="scale === scales[scales.length - 1]"
+            ></button>
+        </div>
+
+        <h6>Tipo de Menu</h6>
+        <div class="p-formgroup-inline">
+            <div class="field-radiobutton">
+                <p-radioButton
+                    name="menuType"
+                    value="static"
+                    [(ngModel)]="app.menuMode"
+                    (onClick)="appMain.isStatic()"
+                    inputId="menuType1"
+                ></p-radioButton>
+                <label for="menuType1">Estático</label>
+            </div>
+            <div class="field-radiobutton">
+                <p-radioButton
+                    name="menuType"
+                    value="overlay"
+                    [(ngModel)]="app.menuMode"
+                    (onClick)="appMain.isOverlay()"
+                    inputId="menuType2"
+                ></p-radioButton>
+                <label for="menuType2">Sobreposição</label>
+            </div>
+
+            <h6>Temas</h6>
+            <div class="grid free-themes">
+                <div class="col-3 text-center">
+                    <button
+                        class="p-link"
+                        (click)="changeTheme('lara-light-purple', false)"
+                    >
+                        <img
+                            src="assets/layout/images/themes/lara-light-purple.png"
+                            alt="Lara Light Purple"
+                        />
+                    </button>
+                </div>
+                <div class="col-3 text-center">
+                    <button
+                        class="p-link"
+                        (click)="changeTheme('saga-purple', false)"
+                    >
+                        <img
+                            src="assets/layout/images/themes/saga-purple.png"
+                            alt="Saga Purple"
+                        />
+                    </button>
+                </div>
+
+                <div class="col-3 text-center">
+                    <button
+                        class="p-link"
+                        (click)="changeTheme('lara-dark-purple', true)"
+                    >
+                        <img
+                            src="assets/layout/images/themes/lara-dark-purple.png"
+                            alt="Lara Dark Purple"
+                        />
+                    </button>
+                </div>
+                <div class="col-3 text-center">
+                    <button
+                        class="p-link"
+                        (click)="changeTheme('arya-purple', true)"
+                    >
+                        <img
+                            src="assets/layout/images/themes/arya-purple.png"
+                            alt="Arya Purple"
+                        />
+                    </button>
+                </div>
+            </div>
+            <div class="field-radiobutton" style="margin-top: 50px">
+                <button
+                    pButton
+                    type="button"
+                    label="Sair"
+                    class="p-button-text p-button-secondary p-button-raised p-button-sm"
+                    icon="pi pi-sign-out"
+                    iconPos="right"
+                    (click)="logoff()"
+                ></button>
+            </div>
+        </div>
+    </div>
+</div>

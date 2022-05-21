@@ -1,0 +1,362 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button
+                            pButton
+                            pRipple
+                            label="Adicionar"
+                            icon="pi pi-plus"
+                            class="p-button-success mr-2"
+                            (click)="openNew()"
+                        ></button>
+                    </div>
+                </ng-template>
+
+                <ng-template pTemplate="right">
+                    <button
+                        pButton
+                        pRipple
+                        label="CSV"
+                        icon="pi pi-upload"
+                        pTooltip="CSV"
+                        tooltipPosition="top"
+                        class="p-button-help"
+                        (click)="dt.exportCSV()"
+                    ></button>
+                    <button
+                        pButton
+                        pRipple
+                        label="PDF"
+                        icon="pi pi-file-pdf"
+                        pTooltip="PDF"
+                        tooltipPosition="top"
+                        class="p-button-danger"
+                        style="margin-left: 5px"
+                        (click)="exportPdf()"
+                    ></button>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table
+                #dt
+                [value]="customers"
+                [columns]="cols"
+                responsiveLayout="scroll"
+                [rows]="10"
+                [globalFilterFields]="['name', 'city']"
+                [rows]="10"
+                [paginator]="true"
+                [rowsPerPageOptions]="[10, 20, 30]"
+                [showCurrentPageReport]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                selectionMode="multiple"
+                [rowHover]="true"
+                dataKey="id"
+            >
+                <ng-template pTemplate="caption">
+                    <div
+                        class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+                    >
+                        <h5 class="m-0">Cadastro de Sessão</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input
+                                pInputText
+                                type="text"
+                                (input)="
+                                    dt.filterGlobal(
+                                        $event.target.value,
+                                        'contains'
+                                    )
+                                "
+                                placeholder="Pesquisar pelo nome"
+                            />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="emptymessage" let-columns>
+                    <tr>
+                        <td
+                            [attr.colspan]="columns.length"
+                            style="text-align: center; font-size: 24px"
+                        >
+                            Nehuma paciente encontrado
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th pSortableColumn="id">
+                            Id<p-sortIcon field="id"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="name">
+                            Paciente<p-sortIcon field="name"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="contact.phone">
+                            Telefone<p-sortIcon field="phone"></p-sortIcon>
+                        </th>
+                        <th pSortableColumn="address.city">
+                            Data<p-sortIcon field="city"></p-sortIcon>
+                        </th>
+                        <th>Ações<p-sortIcon field="actions"></p-sortIcon></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-customer>
+                    <tr>
+                        <td style="width: 18%; min-width: 10rem">
+                            <span class="p-column-title">Id</span>
+                            {{ customer.code || customer.id }}
+                        </td>
+                        <td style="width: 35%; min-width: 10rem">
+                            <span class="p-column-title">Sessão</span>
+                            {{ customer.name }}
+                        </td>
+                        <td style="width: 35%; min-width: 12rem">
+                            <span class="p-column-title">Telefone</span>
+                            ({{ customer.contact.phone | slice: 0:2 }})
+                            {{ customer.contact.phone | slice: 2:7 }}-{{
+                                customer.contact.phone | slice: 7:11
+                            }}
+                        </td>
+                        <td style="width: 30%; min-width: 10rem">
+                            <span class="p-column-title">Data</span>
+                            {{ customer.birthDate | date: "dd/MM/yyyy" }}
+                        </td>
+
+                        <td>
+                            <div class="flex">
+                                <button
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-pencil"
+                                    class="p-button-rounded p-button-success mr-2"
+                                    (click)="editProduct(customer)"
+                                ></button>
+                                <button
+                                    pButton
+                                    pRipple
+                                    icon="pi pi-trash"
+                                    class="p-button-rounded p-button-warning"
+                                    (click)="deleteProduct(customer)"
+                                ></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog
+            [(visible)]="customerDialog"
+            [style]="{ width: '600px' }"
+            header="Cadastro Sessão"
+            [modal]="true"
+            [responsive]="true"
+            class="p-fluid"
+        >
+            <ng-template pTemplate="content">
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-envelope"
+                    pTooltip="Enviar Contrato"
+                    tooltipPosition="top"
+                    class="p-button-rounded p-button-warning mr-2"
+                    *ngIf="
+                        customer.id &&
+                        customer.contact.email &&
+                        customer.documentNumber &&
+                        customer.rg &&
+                        customer.nationality &&
+                        customer.address.street &&
+                        customer.address.city &&
+                        customer.address.number
+                    "
+                    (click)="sendContract(customer)"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-file-pdf"
+                    pTooltip="Ver Contrato"
+                    tooltipPosition="top"
+                    class="p-button-rounded p-button-danger mr-2"
+                    *ngIf="
+                        customer.id &&
+                        customer.contact.email &&
+                        customer.documentNumber &&
+                        customer.rg &&
+                        customer.nationality &&
+                        customer.address.street &&
+                        customer.address.city &&
+                        customer.address.number
+                    "
+                    (click)="generateContract(customer)"
+                ></button>
+
+                <h5>Dados Paciente</h5>
+                <div class="field col">
+                    <label for="maritalStatus">Paciente</label>
+                    <p-dropdown
+                        inputId="maritalStatus"
+                        [options]="maritalStatus"
+                        [(ngModel)]="customer.maritalStatus"
+                        optionLabel="name"
+                        optionValue="code"
+                        [filter]="true"
+                        [autoDisplayFirst]="false"
+                        [ngClass]="{
+                            'ng-invalid ng-dirty': submitted && !customer.name
+                        }"
+                    ></p-dropdown>
+                    <small
+                        class="ng-dirty ng-invalid"
+                        *ngIf="submitted && !customer.name"
+                        >Paciente é obrigatório.</small
+                    >
+                </div>
+
+                <h5>Sessão</h5>
+                <div class="formgrid grid">
+                    <div class="field col-6">
+                        <label for="birthDate">Agenda</label>
+                        <p-calendar
+                            inputId="birthDate"
+                            appendTo="body"
+                            [touchUI]="false"
+                            [(ngModel)]="customer.birthDate"
+                            dateFormat="dd/mm/yy"
+                            name="birthDate"
+                            icon="pi pi-calendar"
+                            [showIcon]="false"
+                            icon="pi pi-calendar"
+                            [yearNavigator]="true"
+                            [monthNavigator]="true"
+                            yearRange="1940:2030"
+                        ></p-calendar>
+                    </div>
+                    <div class="field col-6">
+                        <label for="value">Valor da Sessão</label>
+                        <p-inputNumber
+                            mode="currency"
+                            currency="BRL"
+                            id="value"
+                            [(ngModel)]="customer.value"
+                            required
+                            :min="1"
+                            :max="31"
+                            autofocus
+                            [showButtons]="true"
+                        ></p-inputNumber>
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="birthDate">Anotações</label>
+                    <p-editor
+                        name="annotation"
+                        [(ngModel)]="text"
+                        [style]="{ height: '500px' }"
+                    ></p-editor>
+                </div>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button
+                    pButton
+                    pRipple
+                    label="Salvar"
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    (click)="saveProduct()"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    label="Cancelar"
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    (click)="hideDialog()"
+                ></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog
+            [(visible)]="deleteCustomerDialog"
+            header="Confirme"
+            [modal]="true"
+            [style]="{ width: '450px' }"
+        >
+            <div class="flex align-items-center justify-content-center">
+                <i
+                    class="pi pi-exclamation-triangle mr-3"
+                    style="font-size: 2rem"
+                ></i>
+                <span *ngIf="customer"
+                    >Deseja realmente deletar a sessão de
+                    <b>{{ customer.name }} </b>do dia
+                    <b>{{ customer.birthDate | date: "dd/MM/yyyy" }}</b
+                    >?</span
+                >
+            </div>
+            <ng-template pTemplate="footer">
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    label="Não"
+                    (click)="deleteProductDialog = false"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    label="Sim"
+                    (click)="confirmDelete()"
+                ></button>
+            </ng-template>
+        </p-dialog>
+
+        <p-dialog
+            [(visible)]="sendContractDialog"
+            header="Confirme"
+            [modal]="true"
+            [style]="{ width: '450px' }"
+        >
+            <div class="flex align-items-center justify-content-center">
+                <i
+                    class="pi pi-exclamation-triangle mr-3"
+                    style="font-size: 2rem"
+                ></i>
+                <span *ngIf="customer"
+                    >Deseja enviar contrato para o paciente
+                    <b>{{ customer.name }}</b
+                    >?</span
+                >
+            </div>
+            <ng-template pTemplate="footer">
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-times"
+                    class="p-button-text"
+                    label="Não"
+                    (click)="sendContractDialog = false"
+                ></button>
+                <button
+                    pButton
+                    pRipple
+                    icon="pi pi-check"
+                    class="p-button-text"
+                    label="Sim"
+                    (click)="confirmSendContract()"
+                ></button>
+            </ng-template>
+        </p-dialog>
+    </div>
+</div>
