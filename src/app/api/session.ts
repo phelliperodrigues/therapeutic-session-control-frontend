@@ -1,7 +1,7 @@
 import { Customer } from './customer';
-export class Session {
+export interface Session {
     id?: string;
-    customer?: Customer;
+    customer?: any;
     schedule?: Date;
     value?: number;
     annotation?: string;

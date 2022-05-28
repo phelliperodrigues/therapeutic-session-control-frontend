@@ -97,8 +97,6 @@ export class CustomerComponent implements OnInit {
         edit.birthDate = new Date(moment(edit.birthDate).format('MM/DD/YYYY'));
         this.customer = { ...edit };
         this.selectedPaymentMethods = [...this.customer.paymentMethods];
-
-        console.log('Aqui ->', this.selectedPaymentMethods);
         this.customerDialog = true;
     }
 

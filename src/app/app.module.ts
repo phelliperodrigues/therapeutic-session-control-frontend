@@ -106,7 +106,6 @@ import { EventService } from './service/eventservice';
 import { IconService } from './service/iconservice';
 import { NodeService } from './service/nodeservice';
 import { PhotoService } from './service/photoservice';
-import { ProductService } from './service/productservice';
 import { MenuService } from './service/app.menu.service';
 import { ConfigService } from './service/app.config.service';
 import { SessionComponent } from './components/attendance/session/session.component';
@@ -118,6 +117,7 @@ import { NotfoundComponent } from './components/application/notfound/notfound.co
 import { CompanyComponent } from './components/manager/company/company.component';
 import { ParametersComponent } from './components/manager/parameters/parameters.component';
 import { SessionService } from './service/sessionservice';
+import { CompayService } from './service/companyservice';
 
 @NgModule({
     imports: [
@@ -240,10 +240,10 @@ import { SessionService } from './service/sessionservice';
         IconService,
         NodeService,
         PhotoService,
-        ProductService,
         MenuService,
         ConfigService,
         SessionService,
+        CompayService,
     ],
     bootstrap: [AppComponent],
 })

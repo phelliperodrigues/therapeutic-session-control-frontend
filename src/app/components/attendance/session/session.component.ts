@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Customer } from '../../../api/customer';
 import * as moment from 'moment';
 import { PaymentMethodService } from '../../../service/payment-method-service';
 import { PaymentMethod } from '../../../api/paymentMethod';
 import { SessionService } from '../../../service/sessionservice';
+import { Session } from '../../../api/session';
+import { CustomerService } from '../../../service/customerservice';
+import { Customer } from '../../../api/customer';
 
 @Component({
     selector: 'app-session',
@@ -12,17 +14,17 @@ import { SessionService } from '../../../service/sessionservice';
     templateUrl: './session.component.html',
 })
 export class SessionComponent implements OnInit {
-    customerDialog: boolean;
+    sessionDialog: boolean;
 
     exportColumns: any[] = [];
 
-    deleteCustomerDialog: boolean = false;
+    deleteSessionDialog: boolean = false;
 
     sendContractDialog: boolean = false;
 
-    customers: Customer[];
+    sessions: Session[];
 
-    customer: Customer;
+    session: Session;
 
     text: string;
 
@@ -36,33 +38,26 @@ export class SessionComponent implements OnInit {
 
     statuses: any[];
 
-    maritalStatus = [];
+    customers: Customer[];
 
     rowsPerPageOptions = [5, 10, 20];
 
     constructor(
         private service: SessionService,
-        private paymentMethodService: PaymentMethodService,
+        private customerService: CustomerService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService
     ) {}
 
     ngOnInit() {
-        this.maritalStatus = [
-            { name: 'Casado', code: 'CASADO' },
-            { name: 'Solteiro', code: 'SOLTEIRO' },
-            { name: 'Divorciado', code: 'DIVORCIADO' },
-            { name: 'Viuvo', code: 'VIUVO' },
-            { name: 'Amasiado', code: 'AMASIADO' },
-        ];
         this.getAll();
-        this.getAllPaymentMethods();
+        this.getAllCustomer();
         this.selectedPaymentMethods = [];
         this.cols = [
             { field: 'id', header: 'Id' },
-            { field: 'name', header: 'Nome' },
-            { field: 'address', header: 'Cidade' },
-            { field: 'contact', header: 'Telefone' },
+            { field: 'customer', header: 'Paciente' },
+            { field: 'phone', header: 'Telefone' },
+            { field: 'schedule', header: 'Data' },
             { field: 'actions', header: 'Ações' },
         ];
 
@@ -71,46 +66,44 @@ export class SessionComponent implements OnInit {
             .map((col) => ({ title: col.header, dataKey: col.field }));
     }
 
-    private getAll() {
-        this.service.getSessions().then((data) => {
+    private getAllCustomer() {
+        this.customerService.getCustomers().then((data) => {
             this.customers = data;
         });
     }
 
-    getAllPaymentMethods() {
-        this.paymentMethodService
-            .getPaymentMethods()
-            .then((data) => (this.paymentMethods = data));
+    private getAll() {
+        this.service.getSessions().then((data) => {
+            this.sessions = data;
+        });
     }
 
     openNew() {
-        this.customer = {};
-        this.customer.contact = {};
-        this.customer.address = {};
+        this.session = {};
         this.submitted = false;
-        this.customerDialog = true;
+        this.sessionDialog = true;
     }
 
     deleteSelectedProducts() {
-        this.deleteCustomerDialog = true;
+        this.deleteSessionDialog = true;
     }
 
-    editProduct(edit: Customer) {
-        edit.birthDate = new Date(moment(edit.birthDate).format('MM/DD/YYYY'));
-        this.customer = { ...edit };
-        this.selectedPaymentMethods = [...this.customer.paymentMethods];
-        this.customerDialog = true;
+    editProduct(edit: Session) {
+        edit.schedule = new Date(moment(edit.schedule).format('MM/DD/YYYY'));
+
+        this.session = { ...edit };
+        this.sessionDialog = true;
     }
 
-    deleteProduct(customer: Customer) {
-        this.deleteCustomerDialog = true;
-        this.customer = { ...customer };
+    deleteProduct(session: Session) {
+        this.deleteSessionDialog = true;
+        this.session = { ...session };
     }
 
     confirmDelete() {
-        this.deleteCustomerDialog = false;
+        this.deleteSessionDialog = false;
         this.service
-            .delete(this.customer.id)
+            .delete(this.session.id)
             .then(() => {
                 this.messageService.add({
                     severity: 'success',
@@ -118,7 +111,7 @@ export class SessionComponent implements OnInit {
                     detail: 'Paciente deletado com sucesso',
                     life: 3000,
                 });
-                this.customer = {};
+                this.session = {};
                 this.getAll();
             })
             .catch((error) => {
@@ -129,9 +122,9 @@ export class SessionComponent implements OnInit {
             });
     }
 
-    sendContract(customer: Customer) {
+    sendContract(session: Session) {
         this.sendContractDialog = true;
-        this.customer = { ...customer };
+        this.session = { ...session };
     }
     confirmSendContract() {
         this.sendContractDialog = false;
@@ -152,35 +145,33 @@ export class SessionComponent implements OnInit {
         });
     }
     hideDialog() {
-        this.customerDialog = false;
+        this.sessionDialog = false;
         this.submitted = false;
     }
 
     saveProduct() {
         this.submitted = true;
+        console.log(this.session);
 
-        if (this.customer.name.trim()) {
-            console.log(this.selectedPaymentMethods);
-
-            this.customer.paymentMethods = this.selectedPaymentMethods;
-            if (this.customer.id) {
+        if (this.session.customer.name.trim()) {
+            if (this.session.id) {
                 this.update();
             } else {
                 this.create();
             }
 
-            this.customers = [...this.customers];
-            this.customerDialog = false;
-            this.customer = {};
+            this.sessions = [...this.sessions];
+            this.sessionDialog = false;
+            this.session = {};
             this.getAll();
         }
     }
 
     private create() {
         this.service
-            .create(this.customer)
+            .create(this.session)
             .then(() => {
-                this.customers.push(this.customer);
+                this.sessions.push(this.session);
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Sucesso',
@@ -198,10 +189,10 @@ export class SessionComponent implements OnInit {
 
     private update() {
         this.service
-            .update(this.customer)
+            .update(this.session)
             .then(() => {
-                this.customers[this.findIndexById(this.customer.id)] =
-                    this.customer;
+                this.sessions[this.findIndexById(this.session.id)] =
+                    this.session;
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Sucesso',
@@ -219,8 +210,8 @@ export class SessionComponent implements OnInit {
 
     findIndexById(id: string): number {
         let index = -1;
-        for (let i = 0; i < this.customers.length; i++) {
-            if (this.customers[i].id === id) {
+        for (let i = 0; i < this.sessions.length; i++) {
+            if (this.sessions[i].id === id) {
                 index = i;
                 break;
             }
@@ -237,9 +228,9 @@ export class SessionComponent implements OnInit {
                 const doc = new jsPDF.default('l', 0, 0);
                 // @ts-ignore
 
-                doc.autoTable(this.exportColumns, this.customers);
+                doc.autoTable(this.exportColumns, this.sessions);
                 doc.text(
-                    'Listagem de Pacientes no dia ' +
+                    'Listagem de Sessões no dia ' +
                         moment(new Date()).format('DD/MM/YYYY'),
                     90,
                     10
@@ -252,7 +243,7 @@ export class SessionComponent implements OnInit {
                     author: 'Sistema de gestão de sessões',
                 });
                 doc.save(
-                    'Pacientes-' +
+                    'Sessões-' +
                         moment(new Date()).format('DD-MM-YYYY') +
                         '.pdf'
                 );

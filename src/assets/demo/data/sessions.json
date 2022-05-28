@@ -2,38 +2,44 @@
     "data": [
         {
             "id": "oi12u3221o3iu",
-            "name": "Ping",
-            "documentNumber": "12345612345",
-            "rg": "121231231",
-            "birthDate": "2022-05-12",
-            "maritalStatus": "SOLTEIRO",
-            "nationality": "BRASILEIRO",
-            "expirationDay": 15,
-            "value": 150.5,
-            "address": {
-                "street": "RUA DOS GATOS",
-                "number": "11",
-                "zipCode": "11111-11",
-                "city": "CAT CITY",
-                "district": "BAIRRO",
-                "state": "ALGUM LUGAR",
-                "complement": "teste"
-            },
-            "contact": {
-                "phone": "19986028657",
-                "contactPhone": "22222222222",
-                "email": "PING@BOLINHA.COM.BR"
-            },
-            "paymentMethods": [
-                {
-                    "id": "123",
-                    "description": "Boleto"
+            "schedule": "2022-05-12",
+            "value": 150.4,
+            "annotation": "<div><h2>What is Lorem Ipsum?</h2><p><strong>Lorem Ipsum</strong> is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p></div>",
+            "customer": {
+                "id": "oi12u3221o3iu",
+                "name": "Ping",
+                "documentNumber": "12345612345",
+                "rg": "121231231",
+                "birthDate": "2022-05-12",
+                "maritalStatus": "SOLTEIRO",
+                "nationality": "BRASILEIRO",
+                "expirationDay": 15,
+                "value": 150.5,
+                "address": {
+                    "street": "RUA DOS GATOS",
+                    "number": "11",
+                    "zipCode": "11111-11",
+                    "city": "CAT CITY",
+                    "district": "BAIRRO",
+                    "state": "ALGUM LUGAR",
+                    "complement": "teste"
                 },
-                {
-                    "id": "456",
-                    "description": "Pix"
-                }
-            ]
+                "contact": {
+                    "phone": "19986028657",
+                    "contactPhone": "22222222222",
+                    "email": "PING@BOLINHA.COM.BR"
+                },
+                "paymentMethods": [
+                    {
+                        "id": "123",
+                        "description": "Boleto"
+                    },
+                    {
+                        "id": "456",
+                        "description": "Pix"
+                    }
+                ]
+            }
         }
     ]
 }

@@ -82,11 +82,11 @@ export class AppMenuComponent implements OnInit {
                         icon: 'pi pi-fw pi-user-edit',
                         routerLink: ['manager/company'],
                     },
-                    {
-                        label: 'Parametros',
-                        icon: 'pi pi-fw pi-sliders-h',
-                        routerLink: ['manager/params'],
-                    },
+                    // {
+                    //     label: 'Parametros',
+                    //     icon: 'pi pi-fw pi-sliders-h',
+                    //     routerLink: ['manager/params'],
+                    // },
                 ],
             },
         ];

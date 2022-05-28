@@ -1,1 +1,131 @@
-<p>company works!</p>
+<div class="grid">
+    <p-toast></p-toast>
+    <div class="col-12">
+        <div class="card">
+            <p-toolbar styleClass="mb-4">
+                <h5>Meu Dados</h5>
+            </p-toolbar>
+            <div class="p-fluid p-formgrid grid">
+                <div class="field col-12 md:col-12">
+                    <label htmlFor="firstname2">Nome Completo</label>
+                    <input
+                        type="text"
+                        pInputText
+                        id="name"
+                        [(ngModel)]="company.name"
+                        required
+                        autofocus
+                        [ngClass]="{
+                            'ng-invalid ng-dirty': submitted && !company.name
+                        }"
+                    />
+                    <small
+                        class="ng-dirty ng-invalid"
+                        *ngIf="submitted && !company.name"
+                        >Nome é obrigatório.</small
+                    >
+                </div>
+
+                <div class="field col-12 md:col-6">
+                    <label for="documentNumber">CPF</label>
+                    <input
+                        type="text"
+                        pInputText
+                        id="documentNumber"
+                        [(ngModel)]="company.documentNumber"
+                        required
+                        autofocus
+                    />
+                </div>
+                <div class="field col-12 md:col-6">
+                    <label for="rg">RG</label>
+                    <input
+                        type="text"
+                        pInputText
+                        id="rg"
+                        required
+                        autofocus
+                        [(ngModel)]="company.rg"
+                    />
+                </div>
+                <div class="field col-12">
+                    <h5>Endereço</h5>
+                </div>
+
+                <div class="field col-12 md:col-3">
+                    <label for="zipCode">CEP</label>
+                    <input
+                        type="text"
+                        pInputText
+                        id="zipCode"
+                        required
+                        [(ngModel)]="company.address.zipCode"
+                        autofocus
+                    />
+                </div>
+                <div class="field col-12 md:col-7">
+                    <label for="street">Rua</label>
+                    <input
+                        type="text"
+                        pInputText
+                        id="street"
+                        required
+                        [(ngModel)]="company.address.street"
+                        autofocus
+                    />
+                </div>
+                <div class="field col-12 md:col-2">
+                    <label for="number">Numero</label>
+                    <input
+                        type="text"
+                        pInputText
+                        id="number"
+                        required
+                        [(ngModel)]="company.address.number"
+                        autofocus
+                    />
+                </div>
+                <div class="field col-12 md:col-4">
+                    <label for="complement">Complemento</label>
+                    <input
+                        type="text"
+                        pInputText
+                        id="complement"
+                        autofocus
+                        [(ngModel)]="company.address.complement"
+                    />
+                </div>
+                <div class="field col-12 md:col-6">
+                    <label for="city">Cidade</label>
+                    <input
+                        type="text"
+                        pInputText
+                        id="city"
+                        [(ngModel)]="company.address.city"
+                        required
+                        autofocus
+                    />
+                </div>
+                <div class="field col-12 md:col-2">
+                    <label for="state">Estado</label>
+                    <input
+                        type="text"
+                        pInputText
+                        id="state"
+                        [(ngModel)]="company.address.state"
+                        required
+                        autofocus
+                    />
+                </div>
+            </div>
+            <button
+                pButton
+                pRipple
+                label="Salvar"
+                icon="pi pi-save"
+                class="p-button-success mr-2"
+                (click)="save()"
+            ></button>
+        </div>
+    </div>
+</div>

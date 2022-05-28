@@ -21,10 +21,7 @@ export class SessionService {
 
     private converterStringsParaDatas(sessions: any[]) {
         for (const session of sessions) {
-            session.birthDate = moment(
-                session.birthDate,
-                'YYYY-MM-DD'
-            ).toDate();
+            session.schedule = moment(session.schedule, 'YYYY-MM-DD').toDate();
         }
     }
 
